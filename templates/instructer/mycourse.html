@@ -1,0 +1,47 @@
+{% extends "base.html" %} 
+
+{% block content %}
+<div class="p-4 w-100 m-4 bg-white bg-gradient">
+  <div class="d-flex bd-highlight flex-row justify-content-center">
+    <h1 class="mx-auto mb-5">MY course</h1>
+    <div class="mr-auto mb-5">
+      <a
+        type="button"
+        class="btn btn-lg btn-success mr-auto"
+        disabled
+        href="{% url 'create' %}"
+        >Create New</a
+      >
+    </div>
+  </div>
+
+  <table class="table table-striped">
+    <thead class="thead-dark" id="result">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col ">coursename</th>
+
+        <th scope="col">actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for i in course %}
+      <tr>
+        <th scope="row">1</th>
+        <td>{{i.title}}</td>
+
+        <td>
+          <a href="{% url 'cdi' i.pk  %}" class="btn btn-primary">View</a>
+          <a href="{% url 'courseupdate' i.pk  %}" class="btn btn-success"
+            >Update</a
+          >
+          <a href="{% url 'coursedelete' i.pk  %}" class="btn btn-danger"
+            >Delete</a
+          >
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

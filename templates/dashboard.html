@@ -1,0 +1,51 @@
+{% load static %}
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
+    <ul class="nav">
+      <li class="nav-item">
+        {% if  user.role == 'instructor' %}
+        <a class="nav-link" href="#">
+          <i class="mdi mdi-grid-large menu-icon"></i>
+          <span class="menu-title">Instructer</span>
+        </a>
+        {% else %}
+        <a class="nav-link" href="#">
+          <i class="mdi mdi-grid-large menu-icon"></i>
+          <span class="menu-title">Student</span>
+        </a>
+        {% endif %}
+      </li>
+   
+      <li class="nav-item nav-category">Dashboard</li>
+
+      <li class="nav-item">
+        <a class="nav-link"  href="{% if  user.role == 'instructor' %}{% url 'mci' %}{% else %}{% url 'mcs' %}{% endif %}" aria-expanded="false" aria-controls="charts">
+          <i class="menu-icon mdi mdi-chart-line"></i>
+          <span class="menu-title">My courses</span>
+          <i class="menu-arrow"></i>
+        </a>
+      </li>
+     
+    
+      
+      <li class="nav-item">
+        <a class="nav-link" data-bs-toggle="collapse" href="#profile" aria-expanded="false" aria-controls="profile">
+            <i class="mdi mdi-card-text-outline menu-icon"></i>
+            <span class="menu-title">Profile</span>
+            <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="profile">
+            <ul class="nav flex-column sub-menu">
+                <li class="nav-item"><a class="nav-link" href="{% url 'profile' %}">Profile</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'password_reset' %}">Change Password</a></li>
+                <!-- Add other profile-related links -->
+            </ul>
+        </div>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'logout' %}">
+          <i class="mdi mdi-layers-outline menu-icon"></i>
+          <span class="menu-title">Logout</span>
+      </a>
+  </li>
+    </ul>
+  </nav>

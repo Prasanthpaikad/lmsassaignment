@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+              {{ message }}
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+<div class="p-4 w-100 m-4 bg-secondary bg-gradient" >
+    <form action="{% url 'profile_update' %}" method="post">
+      {% csrf_token %}
+        <div class="form-group">
+            <label for="formGroupExampleInput">UserName</label>
+            <input type="text" class="form-control" id="formGroupExampleInput" aria-describedby="emailHelp" placeholder="Enter User Name" name="username" value = '{{ user.username }}' >
+            
+          </div>
+        <div class="form-group">
+          <label for="exampleInputEmail1">Email address</label>
+          <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" name="email" value = '{{ user.email }}' >
+          <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">Password</label>
+          <input type="password" class="form-control" id="exampleInputPassword1" name="password" placeholder="Password">
+        </div>
+      
+        <button type="submit" class="btn btn-primary">Update</button>
+      </form>
+<div>
+  {% endblock %}

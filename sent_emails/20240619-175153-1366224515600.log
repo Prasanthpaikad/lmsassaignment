@@ -1,0 +1,25 @@
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Password reset on 127.0.0.1:8000
+From: webmaster@localhost
+To: prasanthpaikad@gmail.com
+Date: Wed, 19 Jun 2024 12:21:53 -0000
+Message-ID: <171879971372.2972.17039336934032835127@TR-SandhyM-1231>
+
+
+You're receiving this email because you requested a password reset for your user account at 127.0.0.1:8000.
+
+Please go to the following page and choose a new password:
+
+http://127.0.0.1:8000/reset/Nw/c8vqyh-a3c56fc9bc23c1350407dedb7f27fa03/
+
+Your username, in case you’ve forgotten: paikad
+
+Thanks for using our site!
+
+The 127.0.0.1:8000 team
+
+
+
+-------------------------------------------------------------------------------

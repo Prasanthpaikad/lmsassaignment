@@ -1,0 +1,27 @@
+{% load static %}
+{% if course|length < 1 %}
+<h1>Course Not Found</h1>
+
+
+
+{% else %}
+        
+        {% for i in course %}
+            <div class="card mb-5" style="width: 18rem">
+              <img
+                src="{{i.course_image.url}}"
+                class="card-img-top"
+                alt="..."
+              />
+              <div class="card-body">
+                <h5 class="card-title">{{ i.title }}</h5>
+                <p class="card-text">{{i.description }}</p>
+                {% if user.is_authenticated and user.role == 'student'%}  
+
+                <a href="{% url 'cds' i.pk %}" class="btn btn-primary"
+                  >Enrol Now</a
+                >
+                {% endif %}
+              </div>
+            </div>
+            {% endfor %}

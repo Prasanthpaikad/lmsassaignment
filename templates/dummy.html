@@ -1,0 +1,192 @@
+{% extends "base.html" %} {% block content %} {% load static %}
+{% load custom_filters %}
+
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+              {{ message }}
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+<div class="p-5 m-5 " >
+  <div class="card" >
+    <div class="row no-gutters">
+      <div class="col-md-8">
+        <img src="{{ course.course_image.url}}" class="card-img" alt="Image" />
+      </div>
+      <div class="col-md-4 bg-primary" >
+        <div class="card-body " >
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <div class="row">
+                <div class="col card-title">Course name:</div>
+                <div class="col card-title">{{course.title}}</div>
+              </div>
+            </li>
+            <li class="list-group-item">
+              <div class="row">
+                <div class="col card-title">Description:</div>
+                <div class="col card-title">{{course.description}}</div>
+              </div>
+            </li>
+            <li class="list-group-item">
+              <div class="row">
+                <div class="col card-title">Instructer:</div>
+                <div class="col card-title">{{course.instructor}}</div>
+              </div>
+            </li>
+            <li class="list-group-item">
+              <div class="row">
+                <div class="col card-title">Duration:</div>
+                <div class="col card-title">{{course.duration}}</div>
+              </div>
+            </li>
+            <li class="list-group-item">
+              <div class="row">
+                {% if user.is_authenticated and user.role == 'student' %}
+                <div class="col">
+                  <a class="btn btn-success btn-block mb-3" href="{% url 'enroll_course' course_id=course.id %}">Enroll in Course</a>
+                </div>
+                {% else %}
+                <div class="col">
+                  <p>Only students can enroll in courses. Please log in as a student to enroll.</p>
+                </div>
+                {% endif %}
+
+                
+              </div>
+            </li>
+  
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <h2 class="fs-1 text-center">Course Overview</h2>
+  </div>
+
+  <div class="accordion accordion-flush mb-5 p-5" id="accordionFlushExample" style="color: rgb(240, 142, 14);">
+    {% for module_data in course_content %}
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="flush-heading{{ forloop.counter }}">
+        <button
+          class="accordion-button collapsed fs-4"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#flush-collapse{{ forloop.counter }}"
+          aria-expanded="false"
+          aria-controls="flush-collapse{{ forloop.counter }}"
+        >
+          {{ forloop.counter }} - {{ module_data.module.name }}
+        </button>
+      </h2>
+      <div
+        id="flush-collapse{{ forloop.counter }}"
+        class="accordion-collapse collapse"
+        aria-labelledby="flush-heading{{ forloop.counter }}"
+        data-bs-parent="#accordionFlushExample"
+      >
+        <div class="accordion-body">
+          <div class="accordion" id="accordionExample{{ forloop.counter }}">
+            {% for lesson_data in module_data.lessons %}
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="heading{{ forloop.parentloop.counter }}-{{ forloop.counter }}">
+                <button
+                  class="accordion-button"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapse{{ forloop.parentloop.counter }}-{{ forloop.counter }}"
+                  aria-expanded="true"
+                  aria-controls="collapse{{ forloop.parentloop.counter }}-{{ forloop.counter }}"
+                >
+                  {{ forloop.counter }} - {{ lesson_data.lesson.name }}
+                </button>
+              </h2>
+              <div
+                id="collapse{{ forloop.parentloop.counter }}-{{ forloop.counter }}"
+                class="accordion-collapse collapse"
+                aria-labelledby="heading{{ forloop.parentloop.counter }}-{{ forloop.counter }}"
+                data-bs-parent="#accordionExample{{ forloop.parentloop.counter }}"
+              >
+                <div class="accordion-body d-flex flex-column">
+                  {% for item in lesson_data.content %}
+                  <div class="border-top px-5 py-4 min-height-70 d-md-flex align-items-center">
+                    <div class="d-flex align-items-center me-auto mb-4 mb-md-0">
+                      {% if item|is_video %}
+                      <div class="text-secondary d-flex">
+                        <svg
+                          width="16"
+                          height="16"
+                          viewBox="0 0 16 16"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M14.3164 4.20996C13.985 4.37028 13.8464 4.76904 14.0067 5.10026C14.4447 6.00505 14.6667 6.98031 14.6667 8C14.6667 11.6759 11.6759 14.6667 8 14.6667C4.32406 14.6667 1.33333 11.6759 1.33333 8C1.33333 4.32406 4.32406 1.33333 8 1.33333C9.52328 1.33333 10.9543 1.83073 12.1387 2.77165C12.4259 3.00098 12.846 2.95296 13.0754 2.66471C13.3047 2.37663 13.2567 1.95703 12.9683 1.72803C11.5661 0.613607 9.8016 0 8 0C3.58903 0 0 3.58903 0 8C0 12.411 3.58903 16 8 16C12.411 16 16 12.411 16 8C16 6.77767 15.7331 5.60628 15.2067 4.51969C15.0467 4.18766 14.6466 4.04932 14.3164 4.20996Z"
+                            fill="currentColor"
+                          />
+                          <path
+                            d="M7.99967 2.66663C7.63167 2.66663 7.33301 2.96529 7.33301 3.33329V7.99996C7.33301 8.36796 7.63167 8.66663 7.99967 8.66663H11.333C11.701 8.66663 11.9997 8.36796 11.9997 7.99996C11.9997 7.63196 11.701 7.33329 11.333 7.33329H8.66634V3.33329C8.66634 2.96529 8.36768 2.66663 7.99967 2.66663Z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </div>
+                      <div class="ms-4"><a href="https://youtu.be/F4fbwKV9dBU?si={{ item.youtube_id }}" class="text-black">{{ item.title }}</a></div>
+                      {% elif item|is_pdf %}
+                      <div class="d-flex justify-content-between">
+                        <div class="ms-4 d-flex ">Lecture Notes: <a href="{{ item.file.url }}" target="_blank">{{ item.file.name }}</a></div>
+                      <div text-secondary d-flex class=" mx-auto">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-file-pdf" viewBox="0 0 16 16">
+                          <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1"/>
+                          <path d="M4.603 12.087a.8.8 0 0 1-.438-.42c-.195-.388-.13-.776.08-1.102.198-.307.526-.568.897-.787a7.7 7.7 0 0 1 1.482-.645 20 20 0 0 0 1.062-2.227 7.3 7.3 0 0 1-.43-1.295c-.086-.4-.119-.796-.046-1.136.075-.354.274-.672.65-.823.192-.077.4-.12.602-.077a.7.7 0 0 1 .477.365c.088.164.12.356.127.538.007.187-.012.395-.047.614-.084.51-.27 1.134-.52 1.794a11 11 0 0 0 .98 1.686 5.8 5.8 0 0 1 1.334.05c.364.065.734.195.96.465.12.144.193.32.2.518.007.192-.047.382-.138.563a1.04 1.04 0 0 1-.354.416.86.86 0 0 1-.51.138c-.331-.014-.654-.196-.933-.417a5.7 5.7 0 0 1-.911-.95 11.6 11.6 0 0 0-1.997.406 11.3 11.3 0 0 1-1.021 1.51c-.29.35-.608.655-.926.787a.8.8 0 0 1-.58.029m1.379-1.901q-.25.115-.459.238c-.328.194-.541.383-.647.547-.094.145-.096.25-.04.361q.016.032.026.044l.035-.012c.137-.056.355-.235.635-.572a8 8 0 0 0 .45-.606m1.64-1.33a13 13 0 0 1 1.01-.193 12 12 0 0 1-.51-.858 21 21 0 0 1-.5 1.05zm2.446.45q.226.244.435.41c.24.19.407.253.498.256a.1.1 0 0 0 .07-.015.3.3 0 0 0 .094-.125.44.44 0 0 0 .059-.2.1.1 0 0 0-.026-.063c-.052-.062-.2-.152-.518-.209a4 4 0 0 0-.612-.053zM8.078 5.8a7 7 0 0 0 .2-.828q.046-.282.038-.465a.6.6 0 0 0-.032-.198.5.5 0 0 0-.145.04c-.087.035-.158.106-.196.283-.04.192-.03.469.046.822q.036.167.09.346z"/>
+                        </svg>
+                      </div>
+                      </div>
+                      
+                      
+                      {% endif %}
+                    </div>
+                    <div class="d-flex align-items-center overflow-auto overflow-md-visible flex-shrink-all">
+                      {% if item|is_video  %}
+                      <div class="badge btn-blue-soft me-5 font-size-sm fw-normal py-2">
+                        {{ item.time_duration }} min
+                      </div>
+                      <a href="https://youtu.be/F4fbwKV9dBU?si={{ item.youtube_id }}" class="text-secondary">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          fill="red"
+                          class="bi bi-youtube"
+                          viewBox="0 0 16 16"
+                        >
+                          <path
+                            d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.01 2.01 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.01 2.01 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31 31 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.01 2.01 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A100 100 0 0 1 7.858 2zM6.4 5.209v4.818l4.157-2.408z"
+                          />
+                        </svg>
+                      </a>
+                      {% endif %}
+                    </div>
+                  </div>
+                  {% empty %}
+                  <p>No content added yet.</p>
+                  {% endfor %}
+               
+                </div>
+              </div>
+            </div>
+          
+            {% endfor %}
+       
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+ 
+</div>
+{% endblock %}

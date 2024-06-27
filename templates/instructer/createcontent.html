@@ -1,0 +1,27 @@
+
+{% extends "base.html" %}
+      {% block content %}
+      <h2>Create Lesson Content</h2>
+      <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <h3>Lesson Details</h3>
+          {{ lesson_form.as_p }}
+      
+          <h3>Videos</h3>
+          {{ video_formset.management_form }}
+          {% for form in video_formset %}
+              {{ form.as_p }}
+          {% endfor %}
+      
+          <h3>PDFs</h3>
+          {{ pdf_formset.management_form }}
+          {% for form in pdf_formset %}
+              {{ form.as_p }}
+          {% endfor %}
+      
+          <button type="submit">Save</button>
+      </form>
+      {% endblock %}
+      
+
+  

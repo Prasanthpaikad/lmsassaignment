@@ -1,0 +1,137 @@
+{% extends "base.html" %} {% block content %} {% load static %}
+{% block script%}
+
+<script>
+
+  $(document).ready(function() {
+  $('#category-selector').on('change', function() {
+      var selectedCategory = $(this).val();
+
+      $.get('/filter-data/', { query: selectedCategory }, function (data) {
+        const resultContainer = $('#result');
+        resultContainer.empty();
+       
+
+          if (data.length === 0) {
+              resultContainer.append('<p>No courses found.</p>');
+          } else {
+              data.forEach(course => {
+                resultContainer.append(`<div class="col">
+                  <div class="card mb-5" style="width: 18rem;">
+                    <img
+                  src="${course.image}"
+                  class="card-img-top"
+                  alt="..."
+                />
+                      
+                      <div class="card-body">
+                          <h5 class="card-title">${course.title}</h5>
+                          <p class="card-text">${course.description}</p>
+                          <a href="#" class="btn btn-primary">Enroll Now</a>
+                      </div>
+                  </div>
+                  </div>
+              
+                                
+                            `);
+                        });
+                    }
+                });
+            });
+          }); 
+        
+   
+          
+            
+</script>
+
+
+
+{% endblock %}
+{% block search%}
+<script>
+        
+  $(document).ready(function () {
+          $('#search-input').on('input', function () {
+              const query = $(this).val().trim();
+              console.log(query)
+  
+              $.get('/search/', { query: query }, function (data) {
+                  const resultContainer = $('#result');
+                  resultContainer.empty();
+  
+                  if (data.length === 0) {
+                      resultContainer.append('<p>No courses found.</p>');
+                  } else {
+                      data.forEach(course => {
+                          
+                          resultContainer.append(`<div class="col">
+                <div class="card mb-5" style="width: 18rem;">
+                  <img
+                src="${course.image}"
+                class="card-img-top"
+                alt="..."
+              />
+                    
+                    <div class="card-body">
+                        <h5 class="card-title">${course.title}</h5>
+                        <p class="card-text">${course.description}</p>
+                        <a href="#" class="btn btn-primary">Enroll Now</a>
+                    </div>
+                </div>
+                </div>
+            
+                              
+                          `);
+                      });
+                  }
+              });
+          });
+      }); 
+  
+</script> 
+{% endblock %}
+
+
+
+
+
+
+<div class="p-4 m-5 w-100">
+  <h2>All courses</h2>
+
+  <div class="main-panel w-100">
+    <div class="content-wrapper w-100 bg-success">
+      <div class="container w-100">
+        <div class="row " id="result" >
+          {% for i in course %}
+          <div class="col"  >
+           
+            <div class="card mb-5" style="width: 18rem">
+              <img
+                src="{{i.course_image.url}}"
+                class="card-img-top"
+                alt="..."
+              />
+              <div class="card-body">
+                <h5 class="card-title">{{ i.title }}</h5>
+                <p class="card-text">{{i.description }}</p>
+                {% if user.is_authenticated and user.role == 'student'%}  
+
+                <a href="{% url 'cds' i.pk %}" class="btn btn-primary"
+                  >Enrol Now</a
+                >
+                {% endif %}
+              </div>
+            </div>
+            
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}

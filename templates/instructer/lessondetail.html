@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+{% load custom_filters %}
+
+<h2>{{ lesson.name }}</h2>
+
+<h3>Content</h3>
+<ul>
+   {% for item in content %}
+    <li>
+        {% if item|is_video %}
+            Video: {{ item.title }} ({{ item.time_duration }} mins)
+           
+        {% elif item|is_pdf %}
+            PDF: <a href="{{ item.file.url }}">{{ item.file.name }}</a>
+        {% endif %}
+    </li>
+{% endfor %}
+</ul>
+
+
+{% endblock %}
